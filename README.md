@@ -129,8 +129,7 @@ Could be combined with peak time data to infer high-traffic zones.
 
 **Store_and_fwd_flag**: Not related to trip duration.
 
-**PULocationID**, **DOLocationID**: Just knowing the taxi zones doesn’t account for traffic conditions, road closures, or actual route taken. Additionally, it may introduce noise, since for example, two trips starting from the same pickup and drop-off zone might have very different durations depending on route choice. 
-But I will run feature importance analysis just to be sure.
+**PULocationID**, **DOLocationID**: Just knowing the taxi zones doesn’t account for traffic conditions, road closures, or actual route taken. Additionally, it may introduce noise, since for example, two trips starting from the same pickup and drop-off zone might have very different durations depending on route choice.
 
 ## Correlation Matrix
 ![image](https://github.com/user-attachments/assets/4ae8836f-61a9-4818-9c5f-0771db9fc465)
