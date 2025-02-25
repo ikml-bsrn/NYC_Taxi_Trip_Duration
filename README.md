@@ -132,5 +132,16 @@ Could be combined with peak time data to infer high-traffic zones.
 **PULocationID**, **DOLocationID**: Just knowing the taxi zones doesn’t account for traffic conditions, road closures, or actual route taken. Additionally, it may introduce noise, since for example, two trips starting from the same pickup and drop-off zone might have very different durations depending on route choice. 
 But I will run feature importance analysis just to be sure.
 
+## Correlation Matrix
+![image](https://github.com/user-attachments/assets/4ae8836f-61a9-4818-9c5f-0771db9fc465)
+
+## Simple Analysis on Peak Hours & Busy Days
+The 'hour' and 'weekday' features are created via data transformation from the 'tpep_pickup_datetime' feature available from the dataset. The following graph shows the peak hours and days of the week for NYC Taxis, where the dataset ranges from 2002 to 2024.
+
+![image](https://github.com/user-attachments/assets/20e74317-7b5e-4ff1-878a-2c25cc201c60)
+
+![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
+
+
 More updates coming soon! :)
 
