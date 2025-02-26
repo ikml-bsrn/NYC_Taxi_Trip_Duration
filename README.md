@@ -129,8 +129,31 @@ Could be combined with peak time data to infer high-traffic zones.
 
 **Store_and_fwd_flag**: Not related to trip duration.
 
-**PULocationID**, **DOLocationID**: Just knowing the taxi zones doesn’t account for traffic conditions, road closures, or actual route taken. Additionally, it may introduce noise, since for example, two trips starting from the same pickup and drop-off zone might have very different durations depending on route choice. 
-But I will run feature importance analysis just to be sure.
+**PULocationID**, **DOLocationID**: Just knowing the taxi zones doesn’t account for traffic conditions, road closures, or actual route taken. Additionally, it may introduce noise, since for example, two trips starting from the same pickup and drop-off zone might have very different durations depending on route choice.
+
+## Correlation Matrix
+![image](https://github.com/user-attachments/assets/4ae8836f-61a9-4818-9c5f-0771db9fc465)
+
+## Simple Analysis on Peak Hours & Busy Days
+The 'hour' and 'weekday' features are created via data transformation from the 'tpep_pickup_datetime' feature available from the dataset. The following graph shows the peak hours and days of the week for NYC Taxis, where the dataset ranges from 2002 to 2024.
+
+![image](https://github.com/user-attachments/assets/20e74317-7b5e-4ff1-878a-2c25cc201c60)
+
+![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
+
+## 26/2 Update
+
+- Added new feature 'congestion_index' (further analysis on its importance will be conducted)
+
+- Built and tested Simple Regression model (r2-score: 0.69)
+
+- Built and tested Random Forest Regression (r2-score: 0.75)
+
+- Utilised cross-validation and hyperparameter tuning for RF model. I**mproved the r^2 score by 8.61%.**
+
+- **Limitation** found: Max CPU usage and took a long time to compute
+
+- **Solution** to limitation: Used **RandomizedSearch** instead of **GridSearch**, and used **sampling** of **10**% for Hyperparameter Tuning, and reduced the number of hyperparameter values.
 
 More updates coming soon! :)
 
