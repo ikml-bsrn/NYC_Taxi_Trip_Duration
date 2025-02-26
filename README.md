@@ -141,6 +141,19 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
 
+## 26/2 Update
+
+- Added new feature 'congestion_index' (further analysis on its importance will be conducted)
+
+- Built and tested Simple Regression model (r2-score: 0.69)
+
+- Built and tested Random Forest Regression (r2-score: 0.75)
+
+- Utilised cross-validation and hyperparameter tuning for RF model. I**mproved the r^2 score by 8.61%.**
+
+- **Limitation** found: Max CPU usage and took a long time to compute
+
+- **Solution** to limitation: Used **RandomizedSearch** instead of **GridSearch**, and used **sampling** of **10**% for Hyperparameter Tuning, and reduced the number of hyperparameter values.
 
 More updates coming soon! :)
 
