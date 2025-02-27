@@ -149,7 +149,11 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 - Built and tested Random Forest Regression (r2-score: 0.75)
 
-- Utilised cross-validation and hyperparameter tuning for RF model. I**mproved the r^2 score by 8.61%.**
+- Built and tested XGBoost Regression (r2-score:0.7615)
+
+- Utilised cross-validation and hyperparameter tuning for RF and XGBoost models.
+
+- **Model performance increased by 8.86% (based on r2_score) using XGBoost compared to Simple Regression.**
 
 - **Limitation** found: Max CPU usage and took a long time to compute
 
