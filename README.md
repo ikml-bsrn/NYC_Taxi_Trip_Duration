@@ -3,7 +3,8 @@
 This project aims to create a machine learning model which predicts the estimated trip duration for taxis in New York using relevant features from a dataset by NYC TLC. This system is widely used in many ride-hailing companies such as Uber and Veezu, and has been useful for passengers and drivers in many circumstances.
 
 This project serves as a passion project, where novelty is not particularly emphasised, but serves as a way to gain experience and apply my knowledge in practical context using real-world data.
-Project Details
+
+**Project Details**
 Problem: Users don’t usually know when exactly they will arrive at their destination point in taxis.
 
 **Objectives**: 
