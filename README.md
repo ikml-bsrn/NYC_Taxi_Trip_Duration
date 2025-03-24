@@ -176,16 +176,20 @@ Thus, the predictions are highly error-prone and the models are struggling to ac
 To address the high prediction errors, I decided to explore a Deep Neural Network (DNN) as an alternative modeling approach. Given that the existing models (Simple Regression, Random Forest, and XGBoost) have shown limitations, it is reasonable to believe that DNNs, with their ability to model intricate relationships through multiple layers of neurons, could offer a more robust and flexible solution.
 
 - Details:
--     Sample Size: 10,000
+-     Sample Size: 3,000
 -     Epochs: 100
 -     Batch size: 32
 -     Layers: 4
 -     Included Dropout layers
 
-- Obtained Mean MAE: 4.1735 (+/- 0.1002) minutes
+- Obtained Mean MAE: 4.1602 (+/- 0.1572)
 
-- ![image](https://github.com/user-attachments/assets/62b7e31e-e342-4db4-8a61-3c2033f159e8)
-- ![image](https://github.com/user-attachments/assets/db8f1bb2-d121-4483-9979-eec2d846fd8d)
+Training & validation MAE
+- ![image](https://github.com/user-attachments/assets/2505079e-ddf5-4cbc-876c-4b37fa8497fd)
+Training & validation Loss
+- ![image](https://github.com/user-attachments/assets/791fd4ae-3ed5-4940-9cb1-2aeb5413f8f6)
+
+
 
 Based on the Mean MAE of the DNN model, it outperformed previous models significantly. This shows the ability of the model to tackle the complexity of the data and make more accurate predictions.
 
