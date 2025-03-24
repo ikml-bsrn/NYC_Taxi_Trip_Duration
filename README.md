@@ -19,7 +19,7 @@ NYC TLC - https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 Feature engineering: Create a new Feature called ‘Peak Hours’
 More soon… :)
 
-**Results**: More soon… :)
+**Results**: See section below.
 
 ## Dataset Details
 
@@ -142,11 +142,13 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
 
+# Results
+
 ## 26/2 Update
 
 - Added new feature 'congestion_index' (further analysis on its importance will be conducted)
 
-- Built and tested Simple Regression model (r2-score: 0.69)
+- Built and tested Simple Regression model (MSE: 0.69)
 
 - Built and tested Random Forest Regression (r2-score: 0.75)
 
@@ -160,5 +162,35 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 - **Solution** to limitation: Used **RandomizedSearch** instead of **GridSearch**, and used **sampling** of **10**% for Hyperparameter Tuning, and reduced the number of hyperparameter values.
 
-More updates coming soon! :)
+## 24/3 Update
+The Mean Squared Error (MSE) was used to evaluate the performance of various regression models in predicting the trip duration. The results are as follows:
+
+- Simple Regression MSE: 32.37 minutes
+- Random Forest MSE: 28.09 minutes
+- XGBoost MSE: 27.89 minutes
+
+Based on the results, it is clear that XGBoost and Random Forest outperform Simple Regression, with XGBoost being the best-performing model in this case. Despite this improvement, the prediction errors are still relatively high, indicating that the models are not fully capturing the complexity of the relationships in the data.
+
+Thus, the predictions are highly error-prone and the models are struggling to account for the underlying patterns. This suggests that the data may contain more complex relationships, which the simpler models like Simple Regression are unable to capture effectively.
+
+To address the high prediction errors, I decided to explore a Deep Neural Network (DNN) as an alternative modeling approach. Given that the existing models (Simple Regression, Random Forest, and XGBoost) have shown limitations, it is reasonable to believe that DNNs, with their ability to model intricate relationships through multiple layers of neurons, could offer a more robust and flexible solution.
+
+- Details:
+-     Sample Size: 10,000
+-     Epochs: 100
+-     Batch size: 32
+-     Layers: 4
+-     Included Dropout layers
+
+- Obtained Mean MAE: 4.1735 (+/- 0.1002) minutes
+
+- ![image](https://github.com/user-attachments/assets/62b7e31e-e342-4db4-8a61-3c2033f159e8)
+- ![image](https://github.com/user-attachments/assets/db8f1bb2-d121-4483-9979-eec2d846fd8d)
+
+Based on the Mean MAE of the DNN model, it outperformed previous models significantly. This shows the ability of the model to tackle the complexity of the data and make more accurate predictions.
+
+In the next step, I aim to re-analyse the dataset and consider removing or re-adding several columns which may be beneficial for improving the model performance. Additionally, it is possible to include weather data using OpenWeather API into the dataset.
+
+
+
 
