@@ -3,7 +3,8 @@
 This project aims to create a machine learning model which predicts the estimated trip duration for taxis in New York using relevant features from a dataset by NYC TLC. This system is widely used in many ride-hailing companies such as Uber and Veezu, and has been useful for passengers and drivers in many circumstances.
 
 This project serves as a passion project, where novelty is not particularly emphasised, but serves as a way to gain experience and apply my knowledge in practical context using real-world data.
-Project Details
+
+**Project Details**
 Problem: Users don’t usually know when exactly they will arrive at their destination point in taxis.
 
 **Objectives**: 
@@ -18,7 +19,7 @@ NYC TLC - https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 Feature engineering: Create a new Feature called ‘Peak Hours’
 More soon… :)
 
-**Results**: More soon… :)
+**Results**: See section below.
 
 ## Dataset Details
 
@@ -141,11 +142,13 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
 
+# Results
+
 ## 26/2 Update
 
 - Added new feature 'congestion_index' (further analysis on its importance will be conducted)
 
-- Built and tested Simple Regression model (r2-score: 0.69)
+- Built and tested Simple Regression model (MSE: 0.69)
 
 - Built and tested Random Forest Regression (r2-score: 0.75)
 
@@ -159,5 +162,47 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 - **Solution** to limitation: Used **RandomizedSearch** instead of **GridSearch**, and used **sampling** of **10**% for Hyperparameter Tuning, and reduced the number of hyperparameter values.
 
-More updates coming soon! :)
+## 24/3 Update
+The Mean Squared Error (MSE) was used to evaluate the performance of various regression models in predicting the trip duration. The results are as follows:
+
+- Simple Regression MSE: 32.37 minutes
+- Random Forest MSE: 28.09 minutes
+- XGBoost MSE: 27.89 minutes
+
+Based on the results, it is clear that XGBoost and Random Forest outperform Simple Regression, with XGBoost being the best-performing model in this case. Despite this improvement, the prediction errors are still relatively high, indicating that the models are not fully capturing the complexity of the relationships in the data.
+
+Thus, the predictions are highly error-prone and the models are struggling to account for the underlying patterns. This suggests that the data may contain more complex relationships, which the simpler models like Simple Regression are unable to capture effectively.
+
+To address the high prediction errors, I decided to explore a Deep Neural Network (DNN) as an alternative modeling approach. Given that the existing models (Simple Regression, Random Forest, and XGBoost) have shown limitations, it is reasonable to believe that DNNs, with their ability to model intricate relationships through multiple layers of neurons, could offer a more robust and flexible solution.
+
+- Details:
+-     Sample Size: 3,000
+-     Epochs: 100
+-     Batch size: 32
+-     Layers: 4
+-     Included Dropout layers
+
+- Obtained Mean MAE: 4.1602 (+/- 0.1572)
+
+Training & validation MAE
+- ![image](https://github.com/user-attachments/assets/2505079e-ddf5-4cbc-876c-4b37fa8497fd)
+Training & validation Loss
+- ![image](https://github.com/user-attachments/assets/791fd4ae-3ed5-4940-9cb1-2aeb5413f8f6)
+
+
+
+Based on the Mean MAE of the DNN model, it outperformed previous models significantly. This shows the ability of the model to tackle the complexity of the data and make more accurate predictions.
+
+## Update 2: 24/3 
+- Added new feature called ‘route’ (from ‘PULocationID’ and ‘DOLocationID’)
+- ‘Route’ encoded to ‘route_freq’ using Frequency Encoding for non-DNN models
+- ‘Route’ encoded to ‘route_encoded’ using LabelEncoding for DNN model
+
+**Results**:
+- Simple Regression MSE: 34.09 minutes (slightly worse)
+- Random Forest MSE: 26.98 minutes (improved)
+- XGBoost MSE: 27.81 minutes (minutely improved)
+- DNN MSE: 3.95 minutes (improved by 5.3%)
+
+In the next step, I aim to include weather data using OpenWeather API into the dataset to further improve the model performance.
 
