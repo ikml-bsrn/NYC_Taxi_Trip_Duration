@@ -193,8 +193,16 @@ Training & validation Loss
 
 Based on the Mean MAE of the DNN model, it outperformed previous models significantly. This shows the ability of the model to tackle the complexity of the data and make more accurate predictions.
 
-In the next step, I aim to re-analyse the dataset and consider removing or re-adding several columns which may be beneficial for improving the model performance. Additionally, it is possible to include weather data using OpenWeather API into the dataset.
+## Update 2: 24/3 
+- Added new feature called ‘route’ (from ‘PULocationID’ and ‘DOLocationID’)
+- ‘Route’ encoded to ‘route_freq’ using Frequency Encoding for non-DNN models
+- ‘Route’ encoded to ‘route_encoded’ using LabelEncoding for DNN model
 
+**Results**:
+- Simple Regression MSE: 34.09 minutes (slightly worse)
+- Random Forest MSE: 26.98 minutes (improved)
+- XGBoost MSE: 27.81 minutes (minutely improved)
+- DNN MSE: 3.95 minutes (improved by 5.3%)
 
-
+In the next step, I aim to include weather data using OpenWeather API into the dataset to further improve the model performance.
 
