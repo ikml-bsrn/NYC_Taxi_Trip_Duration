@@ -1,4 +1,4 @@
-# NYC Taxi Trip Duration Estimator
+# NYC Taxi Trip Duration Prediction
 
 This project aims to create a machine learning model which predicts the estimated trip duration for taxis in New York using relevant features from a dataset by NYC TLC. This system is widely used in many ride-hailing companies such as Uber and Veezu, and has been useful for passengers and drivers in many circumstances.
 
