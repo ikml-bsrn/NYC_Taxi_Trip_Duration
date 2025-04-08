@@ -142,6 +142,19 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
 
+
+# Discussions
+
+![image](https://github.com/user-attachments/assets/64125d8c-3241-4861-a3ed-5b28758fc15c)
+
+The observed pattern is a result of capping outliers in the 'trip_distance' feature during data processing. However, instead of capping these outliers, it would be more effective to remove them. This is because capped outliers could reduce the model's accuracy, particularly for predicting trip durations near the 6-7 mile range. The wide variation in trip durations within this range may introduce inconsistencies, making it harder for the model to learn meaningful patterns. Removing these outliers ensures a more reliable relationship between trip distance and trip duration.
+
+![image](https://github.com/user-attachments/assets/1a31cab2-a7e0-43ab-a2f8-3ba0f03e9a8a)
+
+A distinct cluster of data points near 0 miles exhibits significant variation in trip durations. Upon further analysis, it was found that these data points correspond to instances where the trip distance is recorded as 0, which is invalid. These entries must be removed to prevent introducing noise and skewing the model's predictions.
+
+After removing outliers instead of capping them, and manually removing invalid data points and additional outliers,the model performance increased by 3.3%. For further discussions, please refer to the Jupyter Notebook. :)
+
 # Results
 
 ## 26/2 Update
@@ -173,7 +186,7 @@ Based on the results, it is clear that XGBoost and Random Forest outperform Simp
 
 Thus, the predictions are highly error-prone and the models are struggling to account for the underlying patterns. This suggests that the data may contain more complex relationships, which the simpler models like Simple Regression are unable to capture effectively.
 
-To address the high prediction errors, I decided to explore a Deep Neural Network (DNN) as an alternative modeling approach. Given that the existing models (Simple Regression, Random Forest, and XGBoost) have shown limitations, it is reasonable to believe that DNNs, with their ability to model intricate relationships through multiple layers of neurons, could offer a more robust and flexible solution.
+To address the high prediction errors, I decided to explore a **Deep Neural Network (DNN)** as an alternative modeling approach. Given that the existing models (Simple Regression, Random Forest, and XGBoost) have shown limitations, it is reasonable to believe that DNNs, with their ability to model intricate relationships through multiple layers of neurons, could offer a more robust and flexible solution.
 
 - Details:
 -     Sample Size: 3,000
@@ -203,6 +216,3 @@ Based on the Mean MAE of the DNN model, it outperformed previous models signific
 - Random Forest MSE: 26.98 minutes (improved)
 - XGBoost MSE: 27.81 minutes (minutely improved)
 - DNN MSE: 3.95 minutes (improved by 5.3%)
-
-In the next step, I aim to include weather data using OpenWeather API into the dataset to further improve the model performance.
-
