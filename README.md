@@ -13,102 +13,18 @@ To determine the peak times in a day and busy days in a week, which will be used
 Microsoft Learn - https://learn.microsoft.com/en-gb/azure/open-datasets/dataset-taxi-yellow?tabs=azureml-opendatasets 
 NYC TLC - https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page 
 
-**Analysis**:
-Feature engineering: Create a new Feature called ‘Peak Hours’
-More soon… :)
-
-**Results**: See section below.
-
-## Dataset Details
-
-- VendorID: A code indicating the LPEP provider that provided the record. 
-    1= Creative Mobile Technologies, LLC; 
-    2= VeriFone Inc.
-
-- tpep_pickup_datetime: The date and time when the meter was engaged.
-
-- tpep_dropoff_datetime: The date and time when the meter was disengaged.
-
-- passenger_count: The number of passengers in the vehicle. This is a driver-entered value.
-
-- trip_distance: The elapsed trip distance in miles reported by the taximeter.
-
-- RatecodeID: The final rate code in effect at the end of the trip. 
-    1= Standard rate; 
-    2= JFK; 
-    3= Newark; 
-    4= Nassau or Westchester; 
-    5= Negotiated fare; 
-    6= Group ride.
-
--  store_and_fwd_flag: This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, also known as “store and forward,” because the vehicle did not have a connection to the server. 
-    Y= store and forward trip; 
-    N= not a store and forward trip.
-
-- PULocationID: TLC Taxi Zone in which the taximeter was engaged.  
-
-- DOLocationID: TLC Taxi Zone in which the taximeter was disengaged.   
-
-- payment_type: A numeric code signifying how the passenger paid for the trip. 
-    1= Credit card; 
-    2= Cash; 
-    3= No charge; 
-    4= Dispute; 
-    5= Unknown; 
-    6= Voided trip  
-
-- fare_amount: The time-and-distance fare calculated by the meter.
-
-- extra: Miscellaneous extras and surcharges. Currently, this only includes the $0.50 and $1 rush hour and overnight charges.
-
-- mta_tax: $0.50 MTA tax that is automatically triggered based on the metered rate in use.
-
-- tip_amount: This field is automatically populated for credit card tips. Cash tips are not included.
-
-- tolls_amount: Total amount of all tolls paid in trip.
-
-- improvement_surcharge: $0.30 improvement surcharge assessed trips at the flag drop. The improvement surcharge began being levied in 2015.
-
-- total_amount: The total amount charged to passengers. Does not include cash tips.
-
-- congestion_surcharge:
-
-- Airport_fee
-
 ## Initial Analysis on Features
 ### Feature Selection
 #### Relevant Attributes
 
-##### Pickup & Drop Off Time:
-Why? Peak hours, day of the week, and seasonality affect trip duration.
-Feature Engineering:
-Extract hour of the day (0-23) → Helps identify rush hours.
-Extract day of the week (0-6) → Weekends vs. weekdays.
-Extract month/season → Weather and tourism seasons.
+| **Feature**                           | **Reason for Inclusion**                                                              | **Planned Transformations**                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Pickup & Drop-off Time**            | Captures temporal patterns: peak hours, weekdays vs weekends, and seasonal variations | - Extract **hour** (0–23)<br>- Extract **day of week** (0–6)<br>- Extract **month/season** |
+| **Trip Distance**                     | Core determinant of trip duration                                                     | - Use as-is or apply **min-max scaling**                                                   |
+| **Passenger Count** *(optional)*      | May affect vehicle performance or indicate shared rides                               | - Include as-is initially<br>- Evaluate **feature importance**                             |
+| **Extra (Rush Hour Flag)**            | Direct indicator of rush-hour periods (\$1 surcharge)                                 | - Convert to **binary** (1 = Rush Hour, 0 = Not)<br>- May merge with peak time             |
+| **Congestion Surcharge** *(optional)* | Possible proxy for traffic conditions or high-demand zones                            | - Use as-is<br>- Consider merging with **peak hour indicators**                            |
 
-##### Trip Distance:
-Why? Core factor in determining duration.
-Feature Engineering:
-Keep as-is or normalize using min-max scaling.
-
-
-##### Passenger Count (Maybe)
-Why? Could impact weight, vehicle performance, or likelihood of shared rides.
-Feature Engineering:
-Try including it as-is and analyze feature importance later.
-
-
-##### Extra (Rush Hour Indicator)
-Why? It explicitly marks rush-hour trips ($1 rush-hour charge).
-Feature Engineering:
-Binary feature: 1 = Rush Hour, Other = Non-Rush Hour.
-Could be merged into the "Peak Time" feature.
-
-##### Congestion Surcharge (Maybe)
-Why? Might be correlated with congestion, affecting duration.
-Feature Engineering:
-Keep as-is and test importance.
-Could be combined with peak time data to infer high-traffic zones.
 
 #### Features To Drop
 
@@ -139,19 +55,6 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 ![image](https://github.com/user-attachments/assets/20e74317-7b5e-4ff1-878a-2c25cc201c60)
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
-
-
-# Discussions
-
-![image](https://github.com/user-attachments/assets/64125d8c-3241-4861-a3ed-5b28758fc15c)
-
-The observed pattern is a result of capping outliers in the 'trip_distance' feature during data processing. However, instead of capping these outliers, it would be more effective to remove them. This is because capped outliers could reduce the model's accuracy, particularly for predicting trip durations near the 6-7 mile range. The wide variation in trip durations within this range may introduce inconsistencies, making it harder for the model to learn meaningful patterns. Removing these outliers ensures a more reliable relationship between trip distance and trip duration.
-
-![image](https://github.com/user-attachments/assets/1a31cab2-a7e0-43ab-a2f8-3ba0f03e9a8a)
-
-A distinct cluster of data points near 0 miles exhibits significant variation in trip durations. Upon further analysis, it was found that these data points correspond to instances where the trip distance is recorded as 0, which is invalid. These entries must be removed to prevent introducing noise and skewing the model's predictions.
-
-After removing outliers instead of capping them, and manually removing invalid data points and additional outliers,the model performance increased by 3.3%. For further discussions, please refer to the Jupyter Notebook. :)
 
 # Results
 
@@ -214,3 +117,18 @@ Based on the Mean MAE of the DNN model, it outperformed previous models signific
 - Random Forest MSE: 26.98 minutes (improved)
 - XGBoost MSE: 27.81 minutes (minutely improved)
 - DNN MSE: 3.95 minutes (improved by 5.3%)
+
+
+## Discussions
+
+During the data cleaning and transformation process, I stumbled across two key issues which taught me the impacts of capping outliers.
+
+![image](https://github.com/user-attachments/assets/64125d8c-3241-4861-a3ed-5b28758fc15c)
+
+The observed pattern is a result of capping outliers in the 'trip_distance' feature during data processing. However, instead of capping these outliers, it would be more effective to remove them. This is because capped outliers could reduce the model's accuracy, particularly for predicting trip durations near the 6-7 mile range. The wide variation in trip durations within this range may introduce inconsistencies, making it harder for the model to learn meaningful patterns. Removing these outliers ensures a more reliable relationship between trip distance and trip duration.
+
+![image](https://github.com/user-attachments/assets/1a31cab2-a7e0-43ab-a2f8-3ba0f03e9a8a)
+
+A distinct cluster of data points near 0 miles exhibits significant variation in trip durations. Upon further analysis, it was found that these data points correspond to instances where the trip distance is recorded as 0, which is invalid. These entries must be removed to prevent introducing noise and skewing the model's predictions.
+
+After removing outliers instead of capping them, and manually removing invalid data points and additional outliers,the model performance increased by 3.3%. For more details, please refer to the Jupyter Notebook. :)
