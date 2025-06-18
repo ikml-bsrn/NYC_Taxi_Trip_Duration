@@ -76,7 +76,7 @@ The 'hour' and 'weekday' features are created via data transformation from the '
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
 
-# Results (to be updated)
+# Results
 
 After resolving feature scaling issues and integrating weather data, model MAEs improved significantly.
 
