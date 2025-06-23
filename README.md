@@ -1,82 +1,119 @@
-# NYC Taxi Trip Duration Prediction
+# Taxi Trip Duration Prediction with Open-Meteo
 
-This project builds a machine learning system which predicts **taxi trip duration in New York City**, using real-world trip data from the NYC Taxi and Limousine Commission (TLC) and integrated **historical hourly weather data** such as precipitation, temperature, and weather conditions using Open-Meteo API.
+## Table of Contents
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Data Sources](#data-sources)
+- [Data Preprocessing & Cleaning](#data-preprocessing-and-cleaning)
+- [EDA](#exploratory-data-analysis)
+- [Feature Engineering](#feature-engineering)
+- [Modeling](#modeling)
+- [Evaluation](#evaluation)
+- [Conclusion](#conclusion)
+- [Additional: Update Logs](#update-logs)
+
+## Overview
+
+This project builds a machine learning system which predicts **taxi trip duration in New York City**, using real-world trip data from the NYC Taxi and Limousine Commission (TLC) and integrated **historical hourly weather data** such as precipitation, temperature, and weather conditions retrieved from Open-Meteo API.
+
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Nyctlc_logo.webp" width="200">
+  &nbsp;&nbsp;&nbsp;
+  <img src="https://avatars.githubusercontent.com/u/86407831?v=4" width="200">
+</p>
+
 
 Such predictive systems are widely used by ride-hailing platforms like Uber, Lyft, and Veezu to improve **ETA accuracy**, support **driver dispatching**, and enhance **passenger experience**.
 
-## Project Details
-
-### Problem
+## Problem Statement
 Passengers and drivers often don’t know how long a taxi trip will take. Duration is influenced by a mix of factors: **distance**, **traffic**, **time of day**, and **weather conditions**, and failing to account for these leads to inaccurate ETAs.
 
-### Objectives
 The objective of this project is to:
-- Predict trip duration based on:
+- Build a regression model which predicts trip duration based on:
   - **Pickup and dropoff time**
   - **Trip distance**
   - **Weather conditions** (temperature, rain, snow, etc.)
   - **Time-based features** (rush hour, day of week, month)
-- Extract and use features like:
-  - Peak hours during the day
-  - Busy days in a week
 - Evaluate the impact of **external weather data** on model performance.
 
 ## Data Sources
 
 - **NYC Yellow Taxi Trip Data**  
-  Provided by technology vendors under the TPEP/LPEP programs and collected by NYC TLC.  
-  - [Microsoft Learn – NYC Yellow Taxi Dataset](https://learn.microsoft.com/en-gb/azure/open-datasets/dataset-taxi-yellow?tabs=azureml-opendatasets)  
-  - [NYC TLC Official Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+  Taxi trip records data collected from [NYC TLC Official Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page). Features include:
+  - `Pick-up and drop-off time`
+  - `Pick-up and drop-off location`
+  - `Congestion surcharge`
 
-- **Open-Meteo Historical Weather Data**  
-  Hourly weather data retrieved from Open-Meteo API and matched to yellow taxi trip records based on pickup date and hour. Features include:
+- **Open-Meteo Historical Weather API**  
+  Hourly historical weather data retrieved from [Historical Open-Meteo API](https://open-meteo.com/en/docs/historical-weather-api) and matched to yellow taxi trip records based on pick-up date and hour. Features include:
   - `temperature`
   - `precipitation`
   - `weather_code`
- 
-## Methodology (to be updated)
+
+## Data Preprocessing and Cleaning
+### Missing Values
+
+![image](https://github.com/user-attachments/assets/6cea3fe6-0136-46ff-9b65-e9eaed229b7c)
+
+Out of 19 features, 5 contained missing values. Features with more than 5% missing values are imputed with **mode**.
+
+### Duplicated Data
+
+It is identified in the Taxi Trip Records dataset that there is **0.133%** of duplicated data. As it is not a significant amount, the duplicate rows are eliminated.
+
+### Outliers
+
 ### Feature Selection
-#### Relevant Attributes
+
+Based on domain understanding, certain features (e.g., `Payment Type`, `RatecodeID`) were excluded in the early process, as they were not expected to contribute meaningfully to trip duration prediction. This allows for a more focused analysis on relevant features. 
+#### Relevant Features
 
 | **Feature**                           | **Reason for Inclusion**                                                              | **Planned Transformations**                                                                |
 | ------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | **Pickup & Drop-off Time**            | Captures temporal patterns: peak hours, weekdays vs weekends, and seasonal variations | - Extract **hour** (0–23)<br>- Extract **day of week** (0–6) |
-| **Trip Distance**                     | Core determinant of trip duration                                                     | - Use as-is or apply **min-max scaling**                                                   |
+| **Trip Distance**                     | Core determinant of trip duration                                                     | - Apply **standard scaling**                                                   |
 | **Passenger Count** *(optional)*      | May affect vehicle performance or indicate shared rides                               | - Include as-is initially<br>- Evaluate **feature importance**                             |
 | **Extra (Rush Hour Flag)**            | Direct indicator of rush-hour periods (\$1 surcharge)                                 | - Convert to **binary** (1 = Rush Hour, 0 = Not)<br>- May merge with peak time             |
 | **Congestion Surcharge** *(optional)* | Possible proxy for traffic conditions or high-demand zones                            | - Use as-is<br>- Consider merging with **peak hour indicators**                            |
 
 #### Features To Drop
 
-**RatecodeID**: Mostly redundant unless you're distinguishing airport rides.
+`RatecodeID`: Mostly redundant unless we're distinguishing airport rides.
 
-**Payment Type**: Not related to trip duration.
+`Payment Type`: Not related to trip duration.
 
-**Tolls Amount**: More related to fare prediction than duration.
+`Tolls Amount`: More related to fare prediction than duration.
 
-**Mta_tax**: More related to fare prediction than duration.
+`Mta_tax`: More related to fare prediction than duration.
 
-**Tip_amount**: More related to fare prediction than duration.
+`Tip_amount`: More related to fare prediction than duration.
 
-**Total_amount**: More related to fare prediction than duration.
+`Total_amount`: More related to fare prediction than duration.
 
-**Airport_fee**: Not related to trip duration.
+`Airport_fee`: Not related to trip duration.
 
-**Store_and_fwd_flag**: Not related to trip duration.
+`Store_and_fwd_flag`: Not related to trip duration.
 
-**PULocationID**, **DOLocationID**: Just knowing the taxi zones doesn’t account for traffic conditions, road closures, or actual route taken. Additionally, it may introduce noise, since for example, two trips starting from the same pickup and drop-off zone might have very different durations depending on route choice. However this is kept to create the 'route' feature.
+`PULocationID`, `DOLocationID`: These features were only used to extract the `route` feature. However, it is acknowledged that knowing the taxi zones alone does not account for traffic conditions, road closures, or actual route taken. For example, two trips starting from the same pickup and drop-off zone might have very different durations due to traffic disruptions or driver's route choice.
 
-## Correlation Matrix
-![image](https://github.com/user-attachments/assets/fa4258df-a86e-49ae-8018-907eb66f0384)
 
-## Analysis on Peak Hours & Busy Days
-The 'hour' and 'weekday' features are created via data transformation from the 'tpep_pickup_datetime' feature available from the dataset. The following graph shows the peak hours and days of the week for NYC Taxis, where the dataset ranges from 2002 to 2024.
+## Exploratory Data Analysis
+The `hour` and `weekday` features are created via data transformation from the 'tpep_pickup_datetime' feature available from the dataset. The following graph shows the peak hours and days of the week for NYC Taxis, where the dataset ranges from 2002 to 2024.
 
 ![image](https://github.com/user-attachments/assets/20e74317-7b5e-4ff1-878a-2c25cc201c60)
 
 ![image](https://github.com/user-attachments/assets/ce42d61d-ba69-47f2-b2dd-c27ef4352e84)
 
-# Results
+## Feature Engineering
+...
+
+### Correlation Matrix
+![image](https://github.com/user-attachments/assets/fa4258df-a86e-49ae-8018-907eb66f0384)
+
+## Modeling
+...
+
+##  Evaluation
 
 After resolving feature scaling issues and integrating weather data, model MAEs improved significantly.
 
@@ -90,7 +127,7 @@ Based on the figure above:
 
 These results affirm that **tree-based models effectively incorporate weather features** in short-trip taxi duration prediction, while simpler or less-optimised models struggle to extract signal from added complexity.
 
-# Discussions
+## Discussions
 
 During the data cleaning and transformation process, I stumbled across two key issues which taught me the impacts of capping outliers.
 
@@ -103,6 +140,9 @@ The observed pattern is a result of capping outliers in the 'trip_distance' feat
 A distinct cluster of data points near 0 miles exhibits significant variation in trip durations. Upon further analysis, it was found that these data points correspond to instances where the trip distance is recorded as 0, which is invalid. These entries must be removed to prevent introducing noise and skewing the model's predictions.
 
 After removing outliers instead of capping them, and manually removing invalid data points and additional outliers,the model performance increased by 3.3%. For more details, please refer to the Jupyter Notebook. :)
+
+
+## Conclusion
 
 # Update Logs
 
