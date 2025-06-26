@@ -98,7 +98,7 @@ Based on domain understanding, certain features (e.g., `Payment Type`, `Ratecode
 
 
 ## Exploratory Data Analysis
-The `hour` and `weekday` features are created via data transformation from the 'tpep_pickup_datetime' feature available from the dataset. The following graph shows the peak hours and days of the week for NYC Taxis, where the dataset ranges from 2002 to 2024.
+The `hour` and `weekday` features are created via data transformation from the `tpep_pickup_datetime` feature available from the dataset. The following graph shows the peak hours and days of the week for NYC Taxis, where the dataset ranges from 2002 to 2024.
 
 ![image](https://github.com/user-attachments/assets/20e74317-7b5e-4ff1-878a-2c25cc201c60)
 
